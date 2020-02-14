@@ -23,7 +23,11 @@ object Configuration {
   trait Test extends Configuration {
     val config: Service[Any] = new Service[Any] {
       val load: Task[Config] = Task.effectTotal(
-        Config(ApiConfig("loacalhost", 8080), DbConfig("localhost", "", "")))
+        Config(
+          ApiConfig("loacalhost", 8080),
+          DbConfig("localhost", "emost", "")
+        )
+      )
     }
   }
 

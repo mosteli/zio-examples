@@ -37,20 +37,18 @@ object Main extends App {
         "/users" -> Api(s"${conf.api.endpoint}/users").route
       ).orNotFound
 
-      server = ZIO.runtime[AppEnvironment].flatMap { implicit rts =>
-        BlazeServerBuilder[AppTask]
-          .bindHttp(conf.api.port, "0.0.0.0")
-          .withHttpApp(CORS(httpApp))
-          .serve
-          .compile[AppTask, AppTask, ExitCode]
-          .drain
+      server = db.mkTable.flatMap(_ => ZIO.runtime[AppEnvironment]).flatMap {
+        implicit rts =>
+          BlazeServerBuilder[AppTask]
+            .bindHttp(conf.api.port, "0.0.0.0")
+            .withHttpApp(CORS(httpApp))
+            .serve
+            .compile[AppTask, AppTask, ExitCode]
+            .drain
       }
-      program <- transactorR.use { transactor =>
-        server.provideSome[ZEnv] { _ =>
-          new Clock.Live with Blocking.Live
-          with Persistence.Live {
-            override protected def tnx: doobie.Transactor[Task] = transactor
-          }
+      program <- server.provideSome[ZEnv] { _ =>
+        new Clock.Live with Blocking.Live with Persistence.Live {
+          override protected def tnx: doobie.Transactor[Task] = transactorR
         }
       }
     } yield program

@@ -1,13 +1,13 @@
 name := "zio-examples"
 version := "0.1"
-scalaVersion := "2.12.6"
+scalaVersion := "2.13.1"
 
 val ScalaZVersion = "7.2.26"
 val Http4sVersion = "0.21.0-M6"
-val CirceVersion = "0.12.0-M1"
+val CirceVersion = "0.12.2"
 val DoobieVersion = "0.8.8"
 val ZIOVersion = "1.0.0-RC17"
-val PureConfigVersion = "0.11.0"
+val PureConfigVersion = "0.12.2"
 val H2Version = "1.4.199"
 val FlywayVersion = "6.0.0-beta2"
 
@@ -26,11 +26,9 @@ libraryDependencies ++= Seq(
   "io.circe" %% "circe-generic-extras" % CirceVersion,
   // Doobie
   "org.tpolecat" %% "doobie-core" % DoobieVersion,
-  "org.tpolecat" %% "doobie-h2" % DoobieVersion,
+  "org.tpolecat" %% "doobie-postgres" % DoobieVersion,
   //pure config
   "com.github.pureconfig" %% "pureconfig" % PureConfigVersion,
-  //h2
-  "com.h2database" % "h2" % H2Version,
   // log4j
   "org.slf4j" % "slf4j-log4j12" % "1.7.26"
 )
